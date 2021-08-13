@@ -1,15 +1,16 @@
 <?php
 
-namespace App\Http\Controllers\API;
+namespace App\Http\Controllers;
 
-use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use App\Models\Post;
 use App\Http\Controllers\API\BaseController as BaseController;
+use App\Models\Comment;
+use App\Models\Post;
+use App\Models\User;
 use Illuminate\Support\Facades\Validator;
-use App\Http\Resources\Post as PostResource;
+use App\Http\Resources\CommentResource as CommentResource;
 
-class PostController extends BaseController
+class CommentController extends BaseController
 {
     /**
      * Display a listing of the resource.
@@ -18,8 +19,6 @@ class PostController extends BaseController
      */
     public function index()
     {
-        $posts = Post::all();
-        return $this->sendResponse(postResource::collection($posts),'posts fetched');
     }
 
     /**
@@ -32,17 +31,17 @@ class PostController extends BaseController
     {
         $input = $request->all();
         $validator = Validator::make($input, [
-            'desc' => 'max:255',
-            'img'  => 'image:jpg,jpeg,png,svg|required',
+            'desc'    => 'required|max:255',
+            'post_id' => 'required|exists:posts,id',
         ]);
 
         if($validator->fails()){
             return $this->sendError($validator->errors());
         }
 
-        $post = Post::create($input);
+        $comment = Comment::create($input);
 
-        return $this->sendResponse(new PostResource($post),'post created!');
+        return $this->sendResponse(new CommentResource($comment),'comment created successfully');
     }
 
     /**
@@ -53,13 +52,7 @@ class PostController extends BaseController
      */
     public function show($id)
     {
-        $post = Post::find($id);
-        if(is_null($post)) {
-
-            return $this->sendError('post does not exist!');
-
-        }
-        return $this->sendResponse(new postResource($post),'Post fetched!');
+        //
     }
 
     /**
@@ -80,9 +73,8 @@ class PostController extends BaseController
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Post $post)
+    public function destroy($id)
     {
-        $post->delete();
-        return $this->sendResponse([],'post deleted!');
+        //
     }
 }

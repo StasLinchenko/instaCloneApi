@@ -15,12 +15,15 @@ class Post extends Model
         'user_id'
     ];
 
-     public function user()
-    {
+     public function user() {
+
         return $this->belongsTo(User::class);
+        
     }
 
-    public function comments(){
-        return $this->hasMany(Comment::class);
+    public function comments() {
+
+        return $this->morphMany(Comment::class,'commentable');
+
     }
 }

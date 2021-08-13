@@ -6,7 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\User;
 use App\Http\Controllers\API\BaseController as BaseController;
-use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Validator;use Illuminate\Support\Facades\Auth;
 
 class AuthController extends BaseController
 {
@@ -18,7 +18,7 @@ class AuthController extends BaseController
             'password' => 'required',
             'c_password' => 'required|same:password',
         ]);
-        
+
         if($validator->fails()){
             return $this->sendError('Validation Error.', $validator->errors());
         }
@@ -30,6 +30,13 @@ class AuthController extends BaseController
         $success['name'] =  $user->name;
 
         return $this->sendResponse($success, 'User register successfully.');
+    }
+
+    public function logout(Request $request)
+    {
+        $request->user()->token()->revoke();
+
+        return $this->sendResponse([],'logout success!');
     }
 
 

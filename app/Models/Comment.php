@@ -9,13 +9,12 @@ class Comment extends Model
 {
     use HasFactory;
 
-    public function user()
-    {
+    public function user() {
         return $this->belongsTo(User::class);
     }
 
-    public function comment()
-    {
-        return $this->belongsTo(Comment::class);
+    public function commentable() {
+        return $this->morphTo();
     }
+
 }
