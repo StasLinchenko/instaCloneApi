@@ -16,7 +16,7 @@ class ProfileController extends BaseController
 {
     public function index(User $user) {
 
-        $post= Post::with('user')->where('user_id', '=', $user->id)->get();
+        $post= User::with('posts')->withCount('posts')->where('id', '=', $user->id)->get();
         return $this->sendResponse(PostResource::collection($post),'user profile');
     }
 
