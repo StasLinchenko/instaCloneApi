@@ -18,7 +18,7 @@ class PostController extends BaseController
      */
     public function index()
     {
-        $posts = Post::all();
+        $posts = Post::with('comments')->get();
         return $this->sendResponse(postResource::collection($posts),'posts fetched');
     }
 
@@ -33,8 +33,6 @@ class PostController extends BaseController
         $input = $request->all();
         $user_id = Auth::id();
         $input ['user_id'] = $user_id;
-        //dd($id);
-        // dd($input);
         $validator = Validator::make($input, [
             'desc' => 'max:255',
             'img'  => 'image:jpg,jpeg,png,svg|required',
@@ -57,12 +55,13 @@ class PostController extends BaseController
      */
     public function show($id)
     {
-        $post = Post::find($id);
+        $post = Post::where('id', $id)->with("comments")->get();
         if(is_null($post)) {
 
             return $this->sendError('post does not exist!');
 
         }
+
         return $this->sendResponse(new postResource($post),'Post fetched!');
     }
 

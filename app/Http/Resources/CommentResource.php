@@ -23,5 +23,6 @@ class CommentResource extends JsonResource
             'updated_at' => $this->updated_at,
 
         ];
+        // return parent::toArray($request);
     }
 }
