@@ -25,6 +25,7 @@ Route::post('/register', 'AuthController@register')->name('register');
 Route::middleware(['auth:api'])->group(function () {
     Route::resource('/posts', 'PostController');
     Route::post('/logout','AuthController@logout');
+    Route::post('/posts/{post}/comment','CommentController@store');
 });
 
 

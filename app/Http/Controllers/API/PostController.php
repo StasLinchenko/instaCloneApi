@@ -2,12 +2,12 @@
 
 namespace App\Http\Controllers\API;
 
-use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Post;
 use App\Http\Controllers\API\BaseController as BaseController;
 use Illuminate\Support\Facades\Validator;
 use App\Http\Resources\Post as PostResource;
+use Illuminate\Support\Facades\Auth;
 
 class PostController extends BaseController
 {
@@ -31,6 +31,10 @@ class PostController extends BaseController
     public function store(Request $request)
     {
         $input = $request->all();
+        $user_id = Auth::id();
+        $input ['user_id'] = $user_id;
+        //dd($id);
+        // dd($input);
         $validator = Validator::make($input, [
             'desc' => 'max:255',
             'img'  => 'image:jpg,jpeg,png,svg|required',

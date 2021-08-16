@@ -19,8 +19,8 @@ class Post extends JsonResource
             'user_id'    => $this->user_id,
             'desc'       => $this->desc,
             'img'        => $this->img,
-            'created_at' => $this->creted_at,//->format('d/m/Y'),
-            'updated_at' => $this->updated_at//->format('d/m/Y'),
+            'created_at' => $this->created_at,
+            'updated_at' => $this->updated_at
         ];
     }
 }
