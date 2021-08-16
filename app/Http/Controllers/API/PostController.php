@@ -7,6 +7,7 @@ use App\Models\Post;
 use App\Http\Controllers\API\BaseController as BaseController;
 use Illuminate\Support\Facades\Validator;
 use App\Http\Resources\Post as PostResource;
+
 use Illuminate\Support\Facades\Auth;
 
 class PostController extends BaseController
@@ -65,16 +66,20 @@ class PostController extends BaseController
         return $this->sendResponse(new postResource($post),'Post fetched!');
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, $id)
+    public function update(Request $request, Post $post)
     {
-        //
+        $input = $request->all();
+        $validator = Validator::make ($input,[
+            'desc' => 'max:255|required',
+        ]);
+
+        if($validator->fails()) {
+            return $this->sendError('Validation error', $validator->errors());
+        }
+        $post->desc = $input['desc'];
+        $post->save();
+
+        return $this->sendResponse(new PostResource($post), 'post updated!');
     }
 
     /**

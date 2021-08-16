@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers\API;
 
-use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Http\Controllers\API\BaseController as BaseController;
 use Illuminate\Support\Facades\Validator;
@@ -16,7 +15,6 @@ class CommentController extends BaseController
         $input = $request->all();
         $user_id = Auth::id();
         $input ['user_id'] = $user_id;
-        //  dd($input);
         $validator = Validator::make($input, [
             'desc'    => 'required|max:255',
             'post_id' => 'required',
@@ -30,5 +28,28 @@ class CommentController extends BaseController
         $comment = Comment::create($input);
 
         return $this->sendResponse(new CommentResource($comment),'comment created successfully');
+    }
+
+    public function delete(Comment $comment) {
+        $comment->delete();
+        return $this->sendResponse([],'comment deleted');
+    }
+
+    public function update (Request $request, Comment $comment) {
+
+        $input = $request->all();
+
+        $validator = Validator::make($input,[
+            'desc' => 'required:255',
+        ]);
+
+        if($validator->fails()){
+            return $this->sendError($validator->errors());
+        }
+
+        $comment->desc = $input['desc'];
+        $comment->save();
+
+        return $this->sendResponse(new CommentResource($comment), 'comment updated');
     }
 }

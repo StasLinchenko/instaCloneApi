@@ -16,16 +16,18 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-// Route::middleware('auth:api')->get('/user', function (Request $request) {
-//     return $request->user();
-// });
-
 Route::post('/register', 'AuthController@register')->name('register');
 
 Route::middleware(['auth:api'])->group(function () {
-    Route::resource('/posts', 'PostController');
     Route::post('/logout','AuthController@logout');
+    Route::resource('/posts', 'PostController');
+    //comment controllers
     Route::post('/posts/{post}/comment','CommentController@store');
+    Route::delete('/comment/{comment}','CommentController@delete');
+    Route::put('comment/{comment}','CommentController@update');
+    //profile controllers
+    Route::get('/profile/{user}','ProfileController@index');
+    Route::put('/profile/{user}', 'ProfileController@update');
 });
 
 
